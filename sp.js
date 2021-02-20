@@ -18,7 +18,7 @@ for (let i = 0; i < COUNT; i++) {
   rndPoints.push(newPoint);
 }
 
-// time complexity: O(m^2 [m is changing from n till 0] + n)
+// time complexity: O(2n + sum((2m)^2, 1, n))
 function getTheShortestPath(points, startingPoint) {
   startingPoint = startingPoint || points[Math.floor(Math.random() * points.length)];
   points = [...points]; // time complexity: O(n)
@@ -26,15 +26,14 @@ function getTheShortestPath(points, startingPoint) {
   // remove the starting point
   // b = startingPoint
   b = points.splice(points.findIndex(p=>p===startingPoint), 1); // time complexity: O(n)
-  while (points.length) {
+  while (points.length) { // time complexity: O(sum((2m)^2, 1, n)) at the worst situation
     minDist = Number.MAX_SAFE_INTEGER;
-    a = NaN;
     for (let i=0; i<points.length; i++) {
       if ((c = distSquare(points[i], b)) < minDist)
         (minDist = c, a=i);
-      b = points.splice(a,1); // time complexity: O(n)
-      path.push(b[0]);
     }
+    b = points.splice(a,1);
+    path.push(b[0]);
   }
 
   // now we have our points sorted in our new array `path`;
